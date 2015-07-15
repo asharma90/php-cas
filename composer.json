@@ -1,0 +1,22 @@
+{
+  "name" : "j-crowe/php-cas",
+  "description" : "A modern CAS Authentication client for php",
+  "keywords" : ["CAS", "phpCas", "SSO", "Authentication", "Auth", "PHP CAS"],
+  "license" : "MIT",
+  "authors" : [
+    {
+      "name" : "Jonathan Crowe",
+      "email" : "jcrowe206@gmail.com"
+    }
+  ],
+  "require" : {
+    "php" : ">=5.5.3",
+    "guzzlehttp/guzzle": "^6.0"
+  },
+  "autoload" : {
+    "psr-4": {
+      "JCrowe\\PHPCas\\": "src/"
+    }
+  }
+
+}
