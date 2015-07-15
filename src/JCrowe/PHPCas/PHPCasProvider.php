@@ -6,6 +6,7 @@ namespace JCrowe\PHPCas;
 use JCrowe\PHPCas\CasClient\RequestBroker;
 use JCrowe\PHPCas\CasClient\Requests\LoginRequest;
 use JCrowe\PHPCas\CasClient\Requests\LogoutRequest;
+use JCrowe\PHPCas\CasClient\Requests\ServiceValidateRequest;
 use JCrowe\PHPCas\CasClient\Requests\ValidateRequest;
 use JCrowe\PHPCas\Contracts\CookieJarContract;
 use JCrowe\PHPCas\Factories\RequestBrokerFactory;
@@ -80,16 +81,34 @@ class PHPCasProvider {
     }
 
 
-
+    /**
+     * Check if the ticket is still valid
+     *
+     * @param ValidateRequest $validateRequest
+     * @return bool
+     */
     public function validate(ValidateRequest $validateRequest)
     {
         if ($response = $this->broker->call($validateRequest)) {
 
-            return $this->responseFactory->makeFromValidateResponse($response->getData());
+            return $this->responseFactory->makeFromValidateResponse($response)->isValid();
         }
 
-        var_dump($response, "Fail");exit;
+        return false;
     }
+
+
+
+    public function serviceValidate(ServiceValidateRequest $validateRequest)
+    {
+        if ($response = $this->broker->call($validateRequest)) {
+
+            var_dump($response->getData());exit;
+        }
+
+        var_dump("FAIL");exit;
+    }
+
 
 
     public function getUser()

@@ -25,16 +25,24 @@ class RequestResponseFactory {
      */
     public function makeFromResponseBody($responseBody)
     {
-        var_dump($responseBody);exit;
+        $response = $this->make();
+        $response->setData($responseBody);
+        $response->markValid();
+
+        return $response;
     }
 
 
+    /**
+     * @param HttpRequest $request
+     * @return ServerResponse
+     */
     public function makeFromRequest(HttpRequest $request)
     {
         $response = $this->make();
 
         if ($ticket = $request->get('ticket')) {
-            $response->setData(['ticket' => $ticket]);
+            $response->setData($ticket);
             $response->markValid();
         }
 
@@ -42,9 +50,23 @@ class RequestResponseFactory {
     }
 
 
-    public function makeFromValidateResponse($responseBody)
+    /**
+     * @param ServerResponse $response
+     * @return ServerResponse
+     */
+    public function makeFromValidateResponse(ServerResponse $response)
     {
-        var_dump($responseBody);exit;
+        $valid = strpos(strtolower($response->getData()), 'yes') !== false;
+
+        if ($valid) {
+
+            $response->markValid();
+        } else {
+
+            $response->markInvalid();
+        }
+
+        return $response;
     }
 
 

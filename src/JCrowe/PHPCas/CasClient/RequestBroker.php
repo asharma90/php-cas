@@ -77,7 +77,7 @@ class RequestBroker {
 
         if ($response->getStatusCode() === 200) {
 
-            return $this->requestResponseFactory->makeFromResponseBody($response->getBody());
+            return $this->requestResponseFactory->makeFromResponseBody($response->getBody()->getContents());
         }
 
         return $this->requestResponseFactory->makeFailedResponse();
