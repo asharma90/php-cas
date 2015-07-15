@@ -36,6 +36,11 @@ class ServerResponse {
      */
     public function setData($data)
     {
+        if ($this->isXMLResponse($data)) {
+
+            $data = $this->parseXMLToJson($data);
+        }
+
         $this->data = $data;
     }
 
@@ -64,6 +69,62 @@ class ServerResponse {
     public function isValid()
     {
         return $this->isValidResponse;
+    }
+
+
+    /**
+     * @param $responseString
+     * @return bool
+     */
+    public function isXMLResponse($responseString)
+    {
+        if (is_string($responseString)) {
+
+            return (bool) $this->getXMLDocFromResponse($responseString);
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param $responseString
+     * @return null|\SimpleXMLElement
+     */
+    protected function getXMLDocFromResponse($responseString)
+    {
+        if (!is_string($responseString)) {
+            return null;
+        }
+
+        libxml_use_internal_errors(true);
+
+        $doc = simplexml_load_string($responseString);
+
+        if (!$doc) {
+
+            libxml_clear_errors();
+
+            return null;
+        }
+
+        return $doc;
+    }
+
+
+    /**
+     * Parse the XML string to Json
+     *
+     * @param $xml
+     * @return array
+     */
+    protected function parseXMLToJson($xml)
+    {
+        $xmlDoc = $this->getXMLDocFromResponse($xml);
+
+        $json = json_encode($xmlDoc);
+
+        return json_decode($json);
     }
 
 }
