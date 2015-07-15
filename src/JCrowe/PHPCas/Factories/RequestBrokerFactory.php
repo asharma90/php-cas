@@ -15,7 +15,7 @@ class RequestBrokerFactory {
     {
         $redirector = new Redirector();
         $configs    = new CasServerConfigs([
-            'host' => 'https://cascollext.lince.it',
+            'host' => 'localhost',
             'port' => 443,
             'uri'  => 'cas'
         ]);
