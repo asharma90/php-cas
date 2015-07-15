@@ -29,6 +29,21 @@ class CasServerConfigs {
      */
     protected $certificate;
 
+
+    /**
+     * Optionally build the configs object with array of configs
+     *
+     * @param array $configs
+     */
+    public function __construct(array $configs = [])
+    {
+        $this->setHost(isset($configs['host']) ? $configs['host'] : null);
+        $this->setPort(isset($configs['port']) ? $configs['port'] : null);
+        $this->setBaseUri(isset($configs['uri']) ? $configs['uri'] : null);
+        $this->setCertificate(isset($configs['certificate']) ? $configs['certificate'] : null);
+    }
+
+
     /**
      * @return String
      */
