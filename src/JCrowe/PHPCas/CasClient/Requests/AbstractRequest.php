@@ -21,6 +21,15 @@ abstract class AbstractRequest {
      */
     protected $service;
 
+
+    /**
+     * The active login ticket
+     *
+     * @var string|null
+     */
+    protected $ticket;
+
+
     /**
      * If this parameter is set, single sign-on will be bypassed.
      * In this case, CAS will require the client to present credentials
@@ -150,6 +159,22 @@ abstract class AbstractRequest {
     public function setUri($uri)
     {
         $this->uri = $uri;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getTicket()
+    {
+        return $this->ticket;
+    }
+
+    /**
+     * @param null|string $ticket
+     */
+    public function setTicket($ticket)
+    {
+        $this->ticket = $ticket;
     }
 
 

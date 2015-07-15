@@ -114,9 +114,36 @@ class CasServerConfigs {
      */
     public function getBaseUrl()
     {
-        return $this->getHost() . $this->getBaseUri();
+        $host = $this->getHost();
+        $uri  = $this->getBaseUri();
+
+        if (!$this->endsWith($host, '/') && !$this->startsWith($uri, '/')) {
+            $uri = '/' . $uri;
+        }
+
+        return $host . $uri;
     }
 
 
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
+    protected function startsWith($haystack, $needle)
+    {
+        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+    }
+
+
+    /**
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
+    protected function endsWith($haystack, $needle)
+    {
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+    }
 
 }

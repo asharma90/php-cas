@@ -34,4 +34,10 @@ interface CookieJarContract {
      */
     public function get($name);
 
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function has($name);
 }

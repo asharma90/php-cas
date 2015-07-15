@@ -14,9 +14,15 @@ class LoginRequest extends AbstractRequest {
      * @param null $service
      * @param null $renew
      * @param null $gateway
+     * @param null $warn
      * @param null $responseMethod
      */
-    public function __construct($service = null, $renew = null, $gateway = null, $responseMethod = null)
+    public function __construct(
+        $service = null,
+        $renew = null,
+        $gateway = null,
+        $responseMethod = null
+    )
     {
         $this->setService($service);
         $this->setRenew($renew);
