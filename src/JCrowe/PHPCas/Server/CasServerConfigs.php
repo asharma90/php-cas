@@ -37,11 +37,21 @@ class CasServerConfigs {
      */
     public function __construct(array $configs = [])
     {
+        $this->setConfigs($configs);
+    }
+
+
+    /**
+     * @param array $configs
+     */
+    public function setConfigs(array $configs = [])
+    {
         $this->setHost(isset($configs['host']) ? $configs['host'] : null);
         $this->setPort(isset($configs['port']) ? $configs['port'] : null);
         $this->setBaseUri(isset($configs['uri']) ? $configs['uri'] : null);
         $this->setCertificate(isset($configs['certificate']) ? $configs['certificate'] : null);
     }
+
 
 
     /**

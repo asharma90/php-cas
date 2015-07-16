@@ -12,7 +12,7 @@ interface CookieJarContract {
      * @param $name
      * @param $data
      * @param $ttl
-     * @return mixed
+     * @return void
      */
     public function set($name, $data, $ttl);
 
@@ -21,7 +21,7 @@ interface CookieJarContract {
      * Forget the cookie
      *
      * @param $name
-     * @return mixed
+     * @return void
      */
     public function forget($name);
 
@@ -37,7 +37,7 @@ interface CookieJarContract {
 
     /**
      * @param $name
-     * @return mixed
+     * @return bool
      */
     public function has($name);
 }

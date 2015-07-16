@@ -3,12 +3,14 @@
 namespace JCrowe\PHPCas;
 
 
+use Illuminate\Encryption\Encrypter;
 use JCrowe\PHPCas\CasClient\RequestBroker;
 use JCrowe\PHPCas\CasClient\Requests\LoginRequest;
 use JCrowe\PHPCas\CasClient\Requests\LogoutRequest;
 use JCrowe\PHPCas\CasClient\Requests\ServiceValidateRequest;
 use JCrowe\PHPCas\CasClient\Requests\ValidateRequest;
 use JCrowe\PHPCas\Contracts\CookieJarContract;
+use JCrowe\PHPCas\Factories\ConfigsFactory;
 use JCrowe\PHPCas\Factories\RequestBrokerFactory;
 use JCrowe\PHPCas\Factories\RequestResponseFactory;
 use JCrowe\PHPCas\Http\HttpRequest;
@@ -41,22 +43,29 @@ class PHPCasProvider {
 
 
     /**
+     * @var Encrypter
+     */
+    protected $encrypter;
+
+
+    /**
      * @param RequestBrokerFactory $brokerFactory
      * @param RequestResponseFactory $responseFactory
      */
     public function __construct(
+        ConfigsFactory $configsFactory,
         RequestBrokerFactory $brokerFactory,
         RequestResponseFactory $responseFactory,
         HttpRequest $httpRequest,
-        CookieJarContract $cookieJar
+        CookieJarContract $cookieJar,
+        Encrypter $encrypter
     )
     {
-        $this->broker = $brokerFactory->make();
+        $this->broker = $brokerFactory->make($configsFactory->getFromConfigFile());
         $this->responseFactory = $responseFactory;
         $this->httpRequest = $httpRequest;
         $this->cookieJar = $cookieJar;
-
-        $this->checkForTicket();
+        $this->encrypter = $encrypter;
     }
 
 
@@ -98,23 +107,54 @@ class PHPCasProvider {
     }
 
 
+    /**
+     * Check if the current client is authenticated
+     *
+     * @return mixed
+     */
+    public function isValidated()
+    {
+        return (bool) $this->getAuthenticatedUser();
+    }
 
+
+    /**
+     * validate the token in the URI
+     *
+     * @param ServiceValidateRequest $validateRequest
+     * @return bool
+     */
     public function serviceValidate(ServiceValidateRequest $validateRequest)
     {
         if ($response = $this->broker->call($validateRequest)) {
 
-            var_dump($response->getData());exit;
+            if ($response->isValid()) {
+
+                $user = $response->getData()['user'];
+
+                $this->cookieJar->set('cas_authenticated', $this->encrypt($user), 0);
+
+                return true;
+            }
         }
 
-        var_dump("FAIL");exit;
+        $this->cookieJar->forget('cas_authenticated');
+
+        return false;
     }
 
 
-
-    public function getUser()
+    /**
+     * Get the authenticated user data
+     *
+     * @return null|string
+     */
+    public function getAuthenticatedUser()
     {
-        if ($ticket = $this->cookieJar->get('cas_ticket')) {
-            return $this->broker->validateUser($ticket);
+
+        if ($this->cookieJar->has('cas_authenticated')) {
+
+            return $this->decrypt($this->cookieJar->get('cas_authenticated'));
         }
 
         return null;
@@ -122,13 +162,23 @@ class PHPCasProvider {
 
 
     /**
-     * Check if a ticket is in the URI and if so set it in a cookie
+     * Encrypt the provided data
+     *
+     * @param $data
      */
-    protected function checkForTicket()
+    public function encrypt($data)
     {
-        if ($ticket = $this->httpRequest->get('ticket')) {
-            $this->cookieJar->set('cas_ticket', $ticket, 0);
-        }
+        return $this->encrypter->encrypt($data);
+    }
+
+
+    /**
+     * @param $data
+     * @return string
+     */
+    public function decrypt($data)
+    {
+        return $this->encrypter->decrypt($data);
     }
 
 }

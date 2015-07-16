@@ -11,15 +11,9 @@ use JCrowe\PHPCas\Server\CasServerConfigs;
 class RequestBrokerFactory {
 
 
-    public function make()
+    public function make(CasServerConfigs $configs)
     {
         $redirector = new Redirector();
-        $configs    = new CasServerConfigs([
-            'host' => 'localhost',
-            'port' => 443,
-            'uri'  => 'cas'
-        ]);
-
         $client = new Client();
         $responseFactory = new RequestResponseFactory();
 

@@ -38,7 +38,7 @@ class ServerResponse {
     {
         if ($this->isXMLResponse($data)) {
 
-            $data = $this->parseXMLToJson($data);
+            $data = $this->parseXMLToArray($data);
         }
 
         $this->data = $data;
@@ -80,7 +80,7 @@ class ServerResponse {
     {
         if (is_string($responseString)) {
 
-            return (bool) $this->getXMLDocFromResponse($responseString);
+            return !is_null($this->getXMLDocFromResponse($responseString));
         }
 
         return false;
@@ -97,11 +97,14 @@ class ServerResponse {
             return null;
         }
 
-        libxml_use_internal_errors(true);
+        $xml = str_replace(["\n", "\r", "\t"], '', $responseString);
+        $xml = trim(str_replace('"', "'", $responseString));
 
-        $doc = simplexml_load_string($responseString);
+//        libxml_use_internal_errors(true);
 
-        if (!$doc) {
+        $doc = simplexml_load_string($xml);
+
+        if ($doc === false) {
 
             libxml_clear_errors();
 
@@ -113,18 +116,42 @@ class ServerResponse {
 
 
     /**
-     * Parse the XML string to Json
+     * Parse the XML string to Array
      *
      * @param $xml
      * @return array
      */
-    protected function parseXMLToJson($xml)
+    protected function parseXMLToArray($xml)
     {
-        $xmlDoc = $this->getXMLDocFromResponse($xml);
+        $dataArray = [];
+        $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
 
-        $json = json_encode($xmlDoc);
+        $dom->loadXML($xml);
 
-        return json_decode($json);
+        if ($dom->getElementsByTagName('authenticationFailure')->length) {
+            // this was a failed call, set up the data accordingly
+
+            $failureNode = $dom->getElementsByTagName('authenticationFailure')->item(0);
+
+            $dataArray['message'] = $failureNode->nodeValue;
+            $dataArray['error_code'] = $failureNode->getAttribute('code');
+
+        } else if ($dom->getElementsByTagName('authenticationSuccess')->length) {
+            // this was a successful call, set up the data!
+
+            $user = $dom->getElementsByTagName('user')->item(0);
+
+            $dataArray['user'] = $user->nodeValue;
+
+            if ($dom->getElementsByTagName('proxyGrantingTicket')->length) {
+
+                $dataArray['proxy_granting_ticket'] = $dom->getElementsByTagName('proxyGrantingTicket')->item(0)->nodeValue;
+            }
+        }
+
+        return $dataArray;
+
     }
 
 }

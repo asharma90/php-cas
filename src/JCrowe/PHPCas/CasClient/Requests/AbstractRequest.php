@@ -178,6 +178,7 @@ abstract class AbstractRequest {
     }
 
 
+
     /**
      * Get a filtered list of params
      *

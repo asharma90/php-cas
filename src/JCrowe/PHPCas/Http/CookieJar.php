@@ -53,7 +53,7 @@ class CookieJar implements CookieJarContract {
     {
         $this->cookieSetInThisRequest[$name] = $data;
 
-        setcookie($name, $data, $ttl);
+        setcookie($name, $data, $ttl, '/', $_SERVER['HTTP_HOST'], true, true);
     }
 
     /**

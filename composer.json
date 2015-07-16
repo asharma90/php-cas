@@ -11,7 +11,8 @@
   ],
   "require" : {
     "php" : ">=5.5.3",
-    "guzzlehttp/guzzle": "^6.0"
+    "guzzlehttp/guzzle": "^6.0",
+    "illuminate/encryption": "^5.1"
   },
   "autoload" : {
     "psr-4": {

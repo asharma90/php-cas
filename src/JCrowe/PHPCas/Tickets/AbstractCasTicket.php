@@ -3,7 +3,7 @@
 namespace JCrowe\PHPCas\Tickets;
 
 
-class CasTicket {
+abstract class AbstractCasTicket {
 
     /**
      * @var string
@@ -19,6 +19,14 @@ class CasTicket {
         $this->setTicket($ticket);
     }
 
+
+    /**
+     * @return int
+     */
+    public function isValid()
+    {
+        return (bool) preg_match('/^[a-z0-9-]*/i$', $this->getTicket());
+    }
 
     /**
      * @param $ticket
