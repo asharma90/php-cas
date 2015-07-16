@@ -78,14 +78,14 @@ class RequestBroker {
 
         if ($response->getStatusCode() === 200) {
 
-            $content = $response->getBody()->getContents();
+            $responseObject = $this->requestResponseFactory->makeFromResponseBody($response->getBody()->getContents());
 
             if ($handler = $this->getHandlerForRequest($request)) {
 
-                $handler->handle($content);
+                $responseObject = $handler->handle($responseObject, $request);
             }
 
-            return $this->requestResponseFactory->makeFromResponseBody($content);
+            return $responseObject;
         }
 
         return $this->requestResponseFactory->makeFailedResponse();
@@ -107,7 +107,7 @@ class RequestBroker {
             $className = substr($className, $pos + 1);
         }
 
-        $handlerClass = 'JCrowe\\PHPCas\\CasClient\\ResponseHandler\\' . $className;
+        $handlerClass = 'JCrowe\\PHPCas\\CasClient\\ResponseHandlers\\' . $className . 'Handler';
 
         return class_exists($handlerClass) ? new $handlerClass() : null;
     }

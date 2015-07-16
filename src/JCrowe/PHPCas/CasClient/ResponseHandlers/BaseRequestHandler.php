@@ -3,7 +3,9 @@
 namespace JCrowe\PHPCas\CasClient\ResponseHandlers;
 
 
+use JCrowe\PHPCas\CasClient\Requests\AbstractRequest;
 use JCrowe\PHPCas\CasXMLParser;
+use JCrowe\PHPCas\Server\ServerResponse;
 
 abstract class BaseRequestHandler {
 
@@ -32,9 +34,9 @@ abstract class BaseRequestHandler {
 
     /**
      * @param $response
-     * @return mixed
+     * @return ServerResponse
      */
-    abstract public function handle($response);
+    abstract public function handle(ServerResponse $response, AbstractRequest $request);
 
 
 

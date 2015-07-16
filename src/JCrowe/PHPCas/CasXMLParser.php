@@ -102,7 +102,8 @@ class CasXMLParser {
         if ($root->hasAttributes()) {
             $attrs = $root->attributes;
             foreach ($attrs as $attr) {
-                $result['attributes'][$attr->name] = $attr->value;
+                $name = str_replace('cas:', '', $attr->name);
+                $result['attributes'][$name] = $attr->value;
             }
         }
 
@@ -121,17 +122,20 @@ class CasXMLParser {
             $groups = [];
 
             foreach ($children as $child) {
-                if (!isset($result[$child->nodeName])) {
-                    $result[$child->nodeName] = $this->domToArray($child);
+                $childName = str_replace('cas:', '', $child->nodeName);
+                if (!isset($result[$childName])) {
+                    $result[$childName] = $this->domToArray($child);
                 } else {
-                    if (!isset($groups[$child->nodeName])) {
-                        $result[$child->nodeName] = array($result[$child->nodeName]);
-                        $groups[$child->nodeName] = 1;
+                    if (!isset($groups[$childName])) {
+                        $result[$childName] = [$result[$childName]];
+                        $groups[$childName] = 1;
                     }
-                    $result[$child->nodeName][] = $this->domToArray($child);
+                    $result[$childName][] = $this->domToArray($child);
                 }
             }
         }
+
+        return $result;
     }
 
 }

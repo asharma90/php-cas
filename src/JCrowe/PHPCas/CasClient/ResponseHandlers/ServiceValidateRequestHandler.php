@@ -3,12 +3,31 @@
 namespace JCrowe\PHPCas\CasClient\ResponseHandlers;
 
 
-class ServiceValidateRequestHandler {
+use JCrowe\PHPCas\CasClient\Requests\AbstractRequest;
+use JCrowe\PHPCas\Server\ServerResponse;
+
+class ServiceValidateRequestHandler extends BaseRequestHandler {
 
 
-    public function handle($response)
+    /**
+     * @param ServerResponse $response
+     * @param AbstractRequest $request
+     * @return ServerResponse
+     */
+    public function handle(ServerResponse $response, AbstractRequest $request)
     {
-        dd($response);
+        $data = $this->parseXML($response->getData());
+
+        if (isset($data['serviceResponse']['authenticationSuccess'])) {
+
+            $response->markValid();
+            $response->setData($data['serviceResponse']['authenticationSuccess']);
+
+        } else {
+            $response->markInvalid();
+        }
+
+        return $response;
     }
 
 }

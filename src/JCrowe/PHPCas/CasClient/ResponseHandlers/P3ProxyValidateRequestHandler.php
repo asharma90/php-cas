@@ -3,17 +3,32 @@
 namespace JCrowe\PHPCas\CasClient\ResponseHandlers;
 
 
-use JCrowe\PHPCas\CasXMLParser;
-use JCrowe\PHPCas\Contracts\RequestHandlerContract;
+use JCrowe\PHPCas\CasClient\Requests\AbstractRequest;
+use JCrowe\PHPCas\Server\ServerResponse;
+
 
 class P3ProxyValidateRequestHandler extends BaseRequestHandler {
 
 
-    public function handle($response)
+    /**
+     * @param ServerResponse $response
+     * @param AbstractRequest $request
+     * @return ServerResponse
+     */
+    public function handle(ServerResponse $response, AbstractRequest $request)
     {
-        $data = $this->parseXML($response);
+        $data = $this->parseXML($response->getData());
 
-        var_dump($data);exit;
+        if (isset($data['serviceResponse']['authenticationSuccess'])) {
+
+            $response->markValid();
+            $response->setData($data['serviceResponse']['authenticationSuccess']);
+
+        } else {
+            $response->markInvalid();
+        }
+
+        return $response;
     }
 
 
