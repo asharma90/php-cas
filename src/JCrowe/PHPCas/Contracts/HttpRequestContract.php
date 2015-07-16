@@ -16,6 +16,15 @@ interface HttpRequestContract {
 
 
     /**
+     * Check if the request has $paramName
+     *
+     * @param $paramName
+     * @return bool
+     */
+    public function has($paramName);
+
+
+    /**
      * Return all of the request parameters as an associative array
      *
      * @return array
