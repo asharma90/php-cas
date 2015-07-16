@@ -49,6 +49,12 @@ class PHPCasProvider {
 
 
     /**
+     * @var Server\CasServerConfigs
+     */
+    protected $configs;
+
+
+    /**
      * @param RequestBrokerFactory $brokerFactory
      * @param RequestResponseFactory $responseFactory
      */
@@ -57,15 +63,15 @@ class PHPCasProvider {
         RequestBrokerFactory $brokerFactory,
         RequestResponseFactory $responseFactory,
         HttpRequest $httpRequest,
-        CookieJarContract $cookieJar,
-        Encrypter $encrypter
+        CookieJarContract $cookieJar
     )
     {
-        $this->broker = $brokerFactory->make($configsFactory->getFromConfigFile());
+        $this->configs = $configsFactory->getFromConfigFile();
+        $this->broker = $brokerFactory->make($this->configs);
         $this->responseFactory = $responseFactory;
         $this->httpRequest = $httpRequest;
         $this->cookieJar = $cookieJar;
-        $this->encrypter = $encrypter;
+        $this->encrypter = new Encrypter($this->configs->getKey(), 'AES-256-CBC');
     }
 
 
@@ -128,7 +134,7 @@ class PHPCasProvider {
     {
         if ($response = $this->broker->call($validateRequest)) {
 
-            if ($response->isValid()) {
+            if (isset($response->getData()['user'])) {
 
                 $user = $response->getData()['user'];
 

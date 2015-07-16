@@ -31,13 +31,23 @@ class CasServerConfigs {
 
 
     /**
+     * The encryption key
+     *
+     * @var string
+     */
+    protected $key;
+
+
+    /**
      * Optionally build the configs object with array of configs
      *
      * @param array $configs
      */
     public function __construct(array $configs = [])
     {
-        $this->setConfigs($configs);
+        if (!empty($configs)) {
+            $this->setConfigs($configs);
+        }
     }
 
 
@@ -50,8 +60,24 @@ class CasServerConfigs {
         $this->setPort(isset($configs['port']) ? $configs['port'] : null);
         $this->setBaseUri(isset($configs['uri']) ? $configs['uri'] : null);
         $this->setCertificate(isset($configs['certificate']) ? $configs['certificate'] : null);
+        $this->setKey($configs['secret_key']);
     }
 
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    }
 
 
     /**
