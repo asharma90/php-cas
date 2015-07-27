@@ -125,7 +125,7 @@ class PHPCasProvider {
 
 
     /**
-     * validate the token in the URI
+     * Validate the token in the URI
      *
      * @param ServiceValidateRequest $validateRequest
      * @return bool
@@ -134,11 +134,17 @@ class PHPCasProvider {
     {
         if ($response = $this->broker->call($validateRequest)) {
 
-            if (isset($response->getData()['user'])) {
+            if ($response->has('user')) {
 
-                $user = $response->getData()['user'];
+                $user = $response->get('user');
 
                 $this->cookieJar->set('cas_authenticated', $this->encrypt($user), 0);
+
+                if ($response->has('proxyGrantingTicket')) {
+
+                    // we need to fire off a proxy grant request now
+                    $this->getProxyGrant($response->get('proxyGrantingTicket'));
+                }
 
                 return true;
             }
@@ -147,6 +153,13 @@ class PHPCasProvider {
         $this->cookieJar->forget('cas_authenticated');
 
         return false;
+    }
+
+
+
+    public function getProxyGrant($proxyGrantingTicket)
+    {
+
     }
 
 

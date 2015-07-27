@@ -10,5 +10,5 @@ return [
     'port'       => 443,
 
     // Where the cas services live on the CAS SSO server
-    'base_uri'   => 'cas'
+    'uri'   => 'cas'
 ];

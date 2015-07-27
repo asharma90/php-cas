@@ -11,7 +11,7 @@ class TicketBroker {
 
     public function handle(AbstractCasTicket $ticket)
     {
-        // do something
+
     }
 
 }

@@ -41,6 +41,27 @@ class ServerResponse {
 
 
     /**
+     * @param $param
+     * @return bool
+     */
+    public function has($param)
+    {
+        return isset($this->getData()[$param]);
+    }
+
+
+    /**
+     * @param $name
+     * @param null $default
+     * @return null
+     */
+    public function get($param, $default = null)
+    {
+        return $this->has($param) ? $this->getData()[$param] : $default;
+    }
+
+
+    /**
      * Mark the response as invalid
      */
     public function markInvalid()
