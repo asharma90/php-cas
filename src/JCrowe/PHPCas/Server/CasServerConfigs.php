@@ -60,6 +60,7 @@ class CasServerConfigs {
         $this->setPort(isset($configs['port']) ? $configs['port'] : null);
         $this->setBaseUri(isset($configs['uri']) ? $configs['uri'] : null);
         $this->setCertificate(isset($configs['certificate']) ? $configs['certificate'] : null);
+        $this->setLoggedInCookieTTL(isset($configs['logged_in_cookie_ttl_in_minutes']) ? $configs['logged_in_cookie_ttl_in_minutes'] : null);
         $this->setKey($configs['secret_key']);
     }
 
