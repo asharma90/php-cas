@@ -9,9 +9,9 @@ Currently this implementation is SSO only without any proxy granting functionali
 
 ## USAGE GUIDE
 
-### 1) Set up your config file located at PHPCas/config.php
+1) Set up your config file located at PHPCas/config.php
 
-### 2) Instantiate the PHPCasProvider in your code
+2) Instantiate the PHPCasProvider in your code
 
 ```php
 
@@ -19,7 +19,7 @@ Currently this implementation is SSO only without any proxy granting functionali
 
 ```
 
-### 3) When a login is required use any of the login methods available through the $provider object
+3) When a login is required use any of the login methods available through the $provider object
 
 
 ```php
@@ -65,7 +65,7 @@ Currently this implementation is SSO only without any proxy granting functionali
 ```
 
 
-### 4) Validate the login ticket provided by the cas user and log the user in to your application
+4) Validate the login ticket provided by the cas user and log the user in to your application
 
 ```php
 
