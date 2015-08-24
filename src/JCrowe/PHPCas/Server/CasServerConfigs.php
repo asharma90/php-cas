@@ -31,6 +31,12 @@ class CasServerConfigs {
 
 
     /**
+     * @var int
+     */
+    protected $loggedInCookieTTL;
+
+
+    /**
      * The encryption key
      *
      * @var string
@@ -143,6 +149,24 @@ class CasServerConfigs {
     public function setCertificate($certificate)
     {
         $this->certificate = $certificate;
+    }
+
+
+    /**
+     * @param $ttl
+     */
+    public function setLoggedInCookieTTL($ttl)
+    {
+        $this->loggedInCookieTTL = $ttl;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getLoggedInCookieTTL()
+    {
+        return $this->loggedInCookieTTL;
     }
 
 
