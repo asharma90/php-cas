@@ -15,10 +15,14 @@ class ConfigsFactory {
 
     public function getFromConfigFile()
     {
-        $configs = require(__DIR__ . '/../config.php');
+        $configFile = __DIR__ .'/../../../../../../config/php-cas.php';
+        $defaultConfigs = require(__DIR__ . '/../default_config.php');
+
+        $userProvidedConfigs = is_file($configFile) ? require($configFile) : [];
+
         $configsEntity = $this->make();
 
-        $configsEntity->setConfigs($configs);
+        $configsEntity->setConfigs(array_merge($defaultConfigs, $userProvidedConfigs));
 
         return $configsEntity;
 

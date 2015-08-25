@@ -9,7 +9,7 @@ Currently this implementation is SSO only without any proxy granting functionali
 
 ## USAGE GUIDE
 
-1) Set up your config file located at PHPCas/config.php
+1) Copy the config file located at vendor/j-crowe/php-cas/src/JCrowe/PHPCas/config.php into your root directory at config/php-cas.php and modify as needed
 
 2) Instantiate the PHPCasProvider in your code
 
