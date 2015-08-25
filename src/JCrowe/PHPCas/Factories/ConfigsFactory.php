@@ -15,7 +15,8 @@ class ConfigsFactory {
 
     public function getFromConfigFile()
     {
-        $configFile = __DIR__ .'/../../../../../../config/php-cas.php';
+        $configFile = __DIR__ .'/../../../../../../../config/php-cas.php';
+
         $defaultConfigs = require(__DIR__ . '/../default_config.php');
 
         $userProvidedConfigs = is_file($configFile) ? require($configFile) : [];
